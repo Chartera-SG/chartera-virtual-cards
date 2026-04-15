@@ -237,6 +237,70 @@
       color: var(--accent);
       text-decoration: none;
     }
+
+    /* QR Modal */
+    .qr-section { cursor: pointer; }
+    .qr-section:hover { background: var(--accent-soft); border-color: rgba(45,212,191,0.35); }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 20, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+    .modal-box {
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      max-width: 300px;
+      width: 90%;
+      animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes popIn { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
+
+    .modal-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    #qrcode-large canvas, #qrcode-large img {
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .modal-hint {
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .modal-close {
+      margin-top: 20px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(45,212,191,0.2);
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      padding: 10px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { background: rgba(45,212,191,0.2); }
   </style>
 </head>
 <body>
@@ -318,14 +382,43 @@
     </div>
   </div>
 
+  <!-- QR Modal -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-box">
+      <div class="modal-title">Scan this QR Code</div>
+      <div id="qrcode-large"></div>
+      <div class="modal-hint">Point your camera here to open Dhruv's card</div>
+      <button class="modal-close" onclick="document.getElementById('qrModal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+
   <script>
+    const url = window.location.href;
+
     new QRCode(document.getElementById("qrcode"), {
-      text: window.location.href,
+      text: url,
       width: 80,
       height: 80,
       colorDark: "#2dd4bf",
       colorLight: "#12213d",
       correctLevel: QRCode.CorrectLevel.M
+    });
+
+    new QRCode(document.getElementById("qrcode-large"), {
+      text: url,
+      width: 220,
+      height: 220,
+      colorDark: "#2dd4bf",
+      colorLight: "#12213d",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    document.querySelector('.qr-section').addEventListener('click', function() {
+      document.getElementById('qrModal').classList.add('open');
+    });
+
+    document.getElementById('qrModal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
     });
   </script>
 </body>
