@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jack Lee — Chartera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0b1628;
+      --navy-mid: #12213d;
+      --navy-light: #1c3055;
+      --accent: #2dd4bf;
+      --accent-soft: rgba(45,212,191,0.12);
+      --white: #f5f8ff;
+      --muted: #7a93b8;
+      --border: rgba(45,212,191,0.15);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--white);
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--navy-mid);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(45,212,191,0.05);
+      animation: rise 0.6s ease both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy-mid) 100%);
+      padding: 40px 36px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(45,212,191,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .card-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.4;
+    }
+
+    .company-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(45,212,191,0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 34px;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .title {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .card-body {
+      padding: 28px 36px 32px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 28px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--white);
+      transition: all 0.2s ease;
+    }
+
+    .link-item:hover {
+      background: var(--accent-soft);
+      border-color: rgba(45,212,191,0.35);
+      transform: translateX(3px);
+    }
+
+    .icon {
+      width: 36px; height: 36px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(45,212,191,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon svg { width: 16px; height: 16px; fill: var(--accent); }
+
+    .link-text {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .link-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .link-value {
+      font-size: 13.5px;
+      font-weight: 400;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .arrow { color: var(--muted); font-size: 14px; }
+
+    /* QR section */
+    .qr-section {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    #qrcode canvas, #qrcode img {
+      border-radius: 8px;
+      display: block;
+    }
+
+    .qr-info {
+      flex: 1;
+    }
+
+    .qr-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .qr-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .footer {
+      padding: 16px 36px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div class="company-tag"><span class="dot"></span> Chartera</div>
+      <div class="name">Jack Lee</div>
+      <div class="title">Co-founder</div>
+    </div>
+
+    <div class="card-body">
+      <div class="divider"></div>
+
+      <div class="links">
+        <a class="link-item" href="https://www.linkedin.com/in/jack-l-547327351/" target="_blank">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.26 2.37 4.26 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0z"/>
+            </svg>
+          </div>
+          <div class="link-text">
+            <span class="link-label">LinkedIn</span>
+            <span class="link-value">linkedin.com/in/jack-l-547327351</span>
+          </div>
+          <span class="arrow">›</span>
+        </a>
+
+        <a class="link-item" href="tel:+6597531624">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.47 11.47 0 0 0 3.59.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.59a1 1 0 0 1-.25 1.01l-2.2 2.19z"/>
+            </svg>
+          </div>
+          <div class="link-text">
+            <span class="link-label">Phone</span>
+            <span class="link-value">+65 9753 1624</span>
+          </div>
+          <span class="arrow">›</span>
+        </a>
+
+        <a class="link-item" href="mailto:jack@chartera.io">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+            </svg>
+          </div>
+          <div class="link-text">
+            <span class="link-label">Email</span>
+            <span class="link-value">jack@chartera.io</span>
+          </div>
+          <span class="arrow">›</span>
+        </a>
+
+        <a class="link-item" href="https://www.chartera.io" target="_blank">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2c.55 0 1.3.56 2 1.9.34.64.64 1.42.87 2.32H9.13c.23-.9.53-1.68.87-2.32C10.7 4.56 11.45 4 12 4zm-3.08.67C8.38 5.6 7.88 6.76 7.57 8H5.1A8.03 8.03 0 0 1 8.92 4.67zM4.26 10h3.06c-.07.64-.12 1.31-.12 2s.05 1.36.12 2H4.26A7.93 7.93 0 0 1 4 12c0-.69.09-1.36.26-2zm.84 6h2.47c.31 1.24.81 2.4 1.35 3.33A8.03 8.03 0 0 1 5.1 16zm4.03 0h5.74c-.23.9-.53 1.68-.87 2.32C13.3 19.44 12.55 20 12 20c-.55 0-1.3-.56-2-1.9-.34-.64-.64-1.42-.87-2.32v.22zm6.61 0h2.47a8.03 8.03 0 0 1-3.82 3.33c.54-.93 1.04-2.09 1.35-3.33zm2.74-2h-3.06c.07-.64.12-1.31.12-2s-.05-1.36-.12-2h3.06c.17.64.26 1.31.26 2s-.09 1.36-.26 2zm-3.4-6h2.47A8.03 8.03 0 0 1 18.9 8h-2.47c-.31-1.24-.81-2.4-1.35-3.33zM13.2 8h-2.4c-.24-.97-.56-1.8-.93-2.46C11.02 5.2 11.5 5 12 5s.98.2 1.13.54C12.76 6.2 12.44 7.03 13.2 8z"/>
+            </svg>
+          </div>
+          <div class="link-text">
+            <span class="link-label">Website</span>
+            <span class="link-value">chartera.io</span>
+          </div>
+          <span class="arrow">›</span>
+        </a>
+      </div>
+
+      <div class="qr-section">
+        <div id="qrcode"></div>
+        <div class="qr-info">
+          <div class="qr-label">This Card</div>
+          <div class="qr-desc">Scan to open Jack's digital card on any device</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="https://www.chartera.io">chartera.io</a> · Maritime Voyage Execution
+    </div>
+  </div>
+
+  <script>
+    new QRCode(document.getElementById("qrcode"), {
+      text: window.location.href,
+      width: 80,
+      height: 80,
+      colorDark: "#2dd4bf",
+      colorLight: "#12213d",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  </script>
+</body>
+</html>
